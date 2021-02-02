@@ -9,14 +9,16 @@ from tqdm import tqdm
 
 class theta:
     def compile(self) -> None:
-        self.executable = self.filename.rreplace('.cpp', '.exe')
-        subprocess.check_output(
-            ['g++', '-o', self.executable, self.filename])
+        if os.name == 'nt':
+            self.executable = self.filename.replace('.cpp', '.exe')
+        else:
+            self.executable = self.filename.replace('.cpp')
+        subprocess.check_output(['g++', '-o', self.executable, self.filename])
 
     def time(self) -> None:
         for i in tqdm(range(2, 200001, 10000)):
             p = subprocess.Popen(
-                [self.filename],
+                [self.executable],
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
                 stderr=subprocess.STDOUT)
@@ -54,7 +56,7 @@ class theta:
         plt.plot(self.x, yp, label=f'O(n²) [{a:.2f}x² + {b:.2f}x + {c:.2f}]')
 
         plt.axvline(x=200000)
-        plt.scatter(x, y)
+        plt.scatter(self.x, self.y)
         ax.set_ylim(0)
         plt.legend()
         plt.show()
@@ -78,7 +80,13 @@ class theta:
 
 
 def main():
-    cpp = theta('pair_hunt.cpp')
+    parser = argparse.ArgumentParser(
+        description='Empirically estimate Big-θ time complexity.'
+    )
+    parser.add_argument('path', help='source code path')
+
+    args = parser.parse_args()
+    cpp = theta(args.path)
     cpp.run()
 
 
