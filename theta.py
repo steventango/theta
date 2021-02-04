@@ -12,7 +12,8 @@ class theta:
         if os.name == 'nt':
             self.executable = self.filename.replace('.cpp', '.exe')
         else:
-            self.executable = self.filename.replace('.cpp')
+            self.executable = self.filename.replace('.cpp', '')
+
         subprocess.check_output(['g++', '-o', self.executable, self.filename])
 
     def time(self) -> None:
@@ -21,7 +22,8 @@ class theta:
                 [self.executable],
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
-                stderr=subprocess.STDOUT)
+                stderr=subprocess.STDOUT
+            )
 
             cin = f'{i} 2000000000\n'
             cin += ' '.join([str(x) for x in range(1000000000,
@@ -71,7 +73,7 @@ class theta:
         if self.filename.endswith('.cpp'):
             os.remove(self.executable)
 
-    def __init__(self, filename) -> None:
+    def __init__(self, filename: str) -> None:
         self.filename = filename
         self.executable = None
         self.x = []
