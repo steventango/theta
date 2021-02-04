@@ -31,7 +31,7 @@ class theta:
             cin = self.generator(n)
 
             start = time.time()
-            p.communicate(input=bytes(cin, 'utf-8'))[0].decode('utf-8')
+            p.communicate(input=bytes(cin, 'utf-8'))
             end = time.time()
             delta = end - start
             delta *= 1000
