@@ -2,10 +2,10 @@ from theta import theta
 
 
 def generate(n: int) -> str:
-  stdin = f'{n} 2000000000\n'
-  stdin += ' '.join([str(x) for x in range(1000000000,
-                                           2000000000, 2000000000 // n)])
-  return stdin
+    stdin = f'{n} 2000000000\n'
+    stdin += ' '.join([str(x) for x in range(1000000000,
+                                             2000000000, 2000000000 // n)])
+    return stdin
 
 
 test = theta(
@@ -13,8 +13,8 @@ test = theta(
     generate,
     2,
     250000,
-    5,
-    5
+    20,
+    1
 )
 
 test.run()

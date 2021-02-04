@@ -34,7 +34,7 @@ class theta:
             p.communicate(input=bytes(cin, 'utf-8'))[0].decode('utf-8')
             end = time.time()
             delta = end - start
-            delta *= 1000000
+            delta *= 1000
             y.append(delta)
         return y
 
@@ -63,7 +63,7 @@ class theta:
         fig, ax = plt.subplots()
         ax.ticklabel_format(useOffset=False, style='plain')
         ax.set_xlabel('n')
-        ax.set_ylabel('time (μs)')
+        ax.set_ylabel('time (ms)')
 
         plt.grid(True)
 
