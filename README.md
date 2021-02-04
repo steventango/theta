@@ -1,5 +1,5 @@
 # theta
-theta is a Python program that empirically estimates the Big-θ time complexity of C++ code.
+theta is a Python program that empirically estimates the Big-θ time complexity of C++ / Python code.
 
 ## Installation
 1. Clone repository

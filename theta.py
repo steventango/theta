@@ -11,18 +11,17 @@ from typing import Callable, List
 class theta:
     def compile(self) -> None:
         if os.name == 'nt':
-            self.executable = self.path.replace('.cpp', '.exe')
+            self.executable = [self.path.replace('.cpp', '.exe')]
         else:
-            self.executable = self.path.replace('.cpp', '')
+            self.executable = [self.path.replace('.cpp', '')]
 
-        subprocess.check_output(['g++', '-o', self.executable, self.path])
+        subprocess.check_output(['g++', '-o', self.executable[0], self.path])
 
     def time(self) -> List[float]:
         y = []
         for n in self.x:
-
             p = subprocess.Popen(
-                [self.executable],
+                self.executable,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
                 stderr=subprocess.STDOUT
@@ -37,6 +36,9 @@ class theta:
             delta *= 1000000
             y.append(delta)
         return y
+
+    def infer(self) -> None:
+        pass
 
     def plot(self) -> None:
         fig, ax = plt.subplots()
@@ -58,7 +60,6 @@ class theta:
         yp = np.polyval([a, b, c], self.x)
         plt.plot(self.x, yp, label=f'O(n²) [{a:.2f}x² + {b:.2f}x + {c:.2f}]')
 
-        plt.axvline(x=200000)
         plt.scatter(self.x, self.y)
         ax.set_ylim(0)
         plt.legend()
@@ -68,7 +69,7 @@ class theta:
         if self.path.endswith('.cpp'):
             self.compile()
         elif self.path.endswith('.py'):
-            self.executable = 'python ' + self.path
+            self.executable = ['python', self.path]
         else:
             raise ValueError('path: file must be a .py or .cpp file.')
 
@@ -77,7 +78,6 @@ class theta:
             # update y average
             self.y = [y + (y_new[i] - y) / k for i, y in enumerate(self.y)]
 
-        print(self.x, self.y)
         self.plot()
 
         if self.path.endswith('.cpp'):
