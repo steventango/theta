@@ -83,10 +83,15 @@ class theta:
         if self.path.endswith('.cpp'):
             os.remove(self.executable)
 
-    def __init__(self,
-                 filename: str,
-                 generator: Callable[[int], str],
-                 start: int, stop: int, n: int = 10, samples: int = 5) -> None:
+    def __init__(
+        self,
+        filename: str,
+        generator: Callable[[int], str],
+        start: int,
+        stop: int,
+        n: int = 10,
+        samples: int = 5
+    ) -> None:
         self.path = filename
         self.generator = generator
         self.samples = samples
