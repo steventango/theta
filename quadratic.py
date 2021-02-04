@@ -9,7 +9,7 @@ test = theta(
     'quadratic.cpp',
     generate,
     2,
-    10000,
+    1000,
     10,
     1
 )

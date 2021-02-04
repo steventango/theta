@@ -46,14 +46,17 @@ class theta:
         linear, (resid, *_) = Polynomial.fit(self.x, self.y, 1, full=True)
         if resid < best_resid:
             best = linear
-            complexity = 'n'
+            if linear.coef[1] > self.epsilon:
+                complexity = 'n'
+            else:
+                complexity = '1'
 
         # m, b = np.polyfit(np.log2(self.x), self.y, 1)
         # yp = np.polyval([m, b], np.log2(self.x))
         # plt.plot(self.x, yp, label=f'O(nlogn) [{m:.2f}log(x) + {b:.2f}]')
 
         quadradic, (resid, *_) = Polynomial.fit(self.x, self.y, 2, full=True)
-        if resid < best_resid and _[1][2] >= 1:
+        if resid < best_resid and quadradic.coef[2] > self.epsilon:
             best = quadradic
             complexity = 'n²'
 
@@ -67,7 +70,7 @@ class theta:
 
         plt.grid(True)
 
-        plt.plot(*line.linspace(), label=f'O({complexity}) [{line:unicode}]')
+        plt.plot(*line.linspace(), label=f'θ({complexity}) [{line:unicode}]')
 
         plt.scatter(self.x, self.y)
         ax.set_ylim(0)
@@ -110,4 +113,5 @@ class theta:
             n = 5
         self.x = [n for n in range(start, stop, math.ceil((stop - start) / n))]
         self.y = [0 for _ in range(n)]
+        self.epsilon = 10
         pass
