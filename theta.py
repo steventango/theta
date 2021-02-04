@@ -81,7 +81,7 @@ class theta:
         self.plot()
 
         if self.path.endswith('.cpp'):
-            os.remove(self.executable)
+            os.remove(self.executable[0])
 
     def __init__(
         self,
