@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 import math
 import numpy as np
+from numpy.polynomial import Polynomial
 import os
 import subprocess
 import time
 from tqdm import tqdm
-from typing import Callable, List
+from typing import Callable, List, Tuple
 
 
 class theta:
@@ -37,10 +38,28 @@ class theta:
             y.append(delta)
         return y
 
-    def infer(self) -> None:
-        pass
+    def infer(self) -> Tuple[Polynomial, str]:
+        best = None
+        complexity = None
+        best_resid = np.inf
 
-    def plot(self) -> None:
+        linear, (resid, *_) = Polynomial.fit(self.x, self.y, 1, full=True)
+        if resid < best_resid:
+            best = linear
+            complexity = 'n'
+
+        # m, b = np.polyfit(np.log2(self.x), self.y, 1)
+        # yp = np.polyval([m, b], np.log2(self.x))
+        # plt.plot(self.x, yp, label=f'O(nlogn) [{m:.2f}log(x) + {b:.2f}]')
+
+        quadradic, (resid, *_) = Polynomial.fit(self.x, self.y, 2, full=True)
+        if resid < best_resid and _[1][2] >= 1:
+            best = quadradic
+            complexity = 'n²'
+
+        return best, complexity
+
+    def plot(self, line: Polynomial, complexity: str) -> None:
         fig, ax = plt.subplots()
         ax.ticklabel_format(useOffset=False, style='plain')
         ax.set_xlabel('n')
@@ -48,17 +67,7 @@ class theta:
 
         plt.grid(True)
 
-        m, b = np.polyfit(self.x, self.y, 1)
-        yp = np.polyval([m, b], self.x)
-        plt.plot(self.x, yp, label=f'O(n) [{m:.2f}x + {b:.2f}]')
-
-        m, b = np.polyfit(np.log2(self.x), self.y, 1)
-        yp = np.polyval([m, b], np.log2(self.x))
-        plt.plot(self.x, yp, label=f'O(nlogn) [{m:.2f}log(x) + {b:.2f}]')
-
-        a, b, c = np.polyfit(self.x, self.y, 2)
-        yp = np.polyval([a, b, c], self.x)
-        plt.plot(self.x, yp, label=f'O(n²) [{a:.2f}x² + {b:.2f}x + {c:.2f}]')
+        plt.plot(*line.linspace(), label=f'O({complexity}) [{line:unicode}]')
 
         plt.scatter(self.x, self.y)
         ax.set_ylim(0)
@@ -78,7 +87,7 @@ class theta:
             # update y average
             self.y = [y + (y_new[i] - y) / k for i, y in enumerate(self.y)]
 
-        self.plot()
+        self.plot(*self.infer())
 
         if self.path.endswith('.cpp'):
             os.remove(self.executable[0])
